@@ -37,11 +37,14 @@ namespace TheWorld
 
             _config = builder . Build ( );
             services . AddSingleton ( _config );
+            services . AddDbContext<Models . WorldContext> ( );
+            services . AddScoped<Models . IWorldRepo , Models . WorldRepo> ( );
+            services . AddTransient<Models . WorldContextSeed> ( );
             services . AddMvc ( );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure ( IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory )
+        public void Configure ( IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory, Models . WorldContextSeed seeder)
         {
 
             if ( env . IsDevelopment ( ) )
@@ -50,6 +53,8 @@ namespace TheWorld
             }
 
             app . UseStaticFiles ( );
+
+         
 
             app . UseMvc ( config =>
             {
@@ -63,7 +68,7 @@ namespace TheWorld
 
             } );
 
-
+            seeder . Seed ( ) . Wait ( );
 
         }
     }

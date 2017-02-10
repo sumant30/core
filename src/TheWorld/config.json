@@ -1,5 +1,8 @@
 ﻿{
   "MailSettings": {
     "ToAddress": "sumant@aol.com"
+  },
+  "ConnectionStrings": {
+    "TheWorldConnectionString":"Server=(localdb)\\MSSQLLocalDB;Database=TheWorld;Trusted_Connection=true;MultipleActiveResultSets=true;" 
   }
 }
