@@ -22,7 +22,10 @@
     "Microsoft.EntityFrameworkCore.Tools": {
       "type": "build",
       "version": "1.0.0-preview2-final"
-    }
+    },
+    "Microsoft.Extensions.Logging.Debug": "1.1.0",
+    "AutoMapper": "5.2.0",
+    "Microsoft.Extensions.Logging.Abstractions": "1.1.0"
   },
   "frameworks": {
     "netcoreapp1.0": {

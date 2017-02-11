@@ -4,6 +4,9 @@ using Microsoft . Extensions . DependencyInjection;
 using Microsoft . Extensions . Logging;
 using TheWorld . Services;
 using Microsoft . Extensions . Configuration;
+using Newtonsoft . Json . Serialization;
+using AutoMapper;
+using TheWorld . ViewModels;
 
 namespace TheWorld
 {
@@ -22,7 +25,7 @@ namespace TheWorld
 
         public void ConfigureServices ( IServiceCollection services )
         {
-           
+
             if ( _env . IsDevelopment ( ) )
             {
                 services . AddScoped<IMailService , DebugMailService> ( );
@@ -40,21 +43,34 @@ namespace TheWorld
             services . AddDbContext<Models . WorldContext> ( );
             services . AddScoped<Models . IWorldRepo , Models . WorldRepo> ( );
             services . AddTransient<Models . WorldContextSeed> ( );
-            services . AddMvc ( );
+            services . AddLogging ( );
+            services . AddMvc ( ) . AddJsonOptions ( config =>
+            {
+                config . SerializerSettings . ContractResolver = new CamelCasePropertyNamesContractResolver ( );
+            } );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure ( IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory, Models . WorldContextSeed seeder)
+        public void Configure ( IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory , Models . WorldContextSeed seeder , ILoggerFactory logger )
         {
 
             if ( env . IsDevelopment ( ) )
             {
                 app . UseDeveloperExceptionPage ( );
+                logger . AddDebug ( LogLevel . Information );
+            }
+            else
+            {
+                logger . AddDebug ( LogLevel . Error );
             }
 
             app . UseStaticFiles ( );
 
-         
+            Mapper . Initialize ( config =>
+                {
+                    config . CreateMap<TripViewModel , Models . Trip> ( ) . ReverseMap ( );
+                    config . CreateMap<StopViewModel , Models . Stop> ( ) . ReverseMap ( );
+                } );
 
             app . UseMvc ( config =>
             {

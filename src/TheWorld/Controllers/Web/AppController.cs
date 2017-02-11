@@ -3,6 +3,7 @@ using TheWorld . ViewModels;
 using TheWorld . Services;
 using Microsoft . Extensions . Configuration;
 using TheWorld . Models;
+using Microsoft . Extensions . Logging;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,18 +14,29 @@ namespace TheWorld . Controllers . Web
         private IMailService _mailService;
         private IConfigurationRoot _config;
         private IWorldRepo _repo;
+        private ILogger<AppController> _logger;
 
-        public AppController ( IMailService mailService,IConfigurationRoot config,Models.IWorldRepo repo)
+        public AppController ( IMailService mailService,IConfigurationRoot config,Models.IWorldRepo repo,ILogger<AppController> logger)
         {
             _mailService = mailService;
             _config = config;
             _repo = repo;
+            _logger = logger;
         }
         // GET: /<controller>/
         public IActionResult Index ( )
         {
-            var data = _repo.GetAllTrips();
-            return View ( data );
+            try
+            {
+                var data = _repo.GetAllTrips();
+                return View ( data );
+            }
+            catch ( System . Exception ex)
+            {
+
+                _logger . LogError ( $"An error occured while fetching trips:{ex . Message}" );
+                return Redirect ( "/error" );
+            }
         }
 
         public IActionResult Contact ( )
