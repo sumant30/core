@@ -7,6 +7,7 @@ using System . Linq;
 using System . Text;
 using System . Threading . Tasks;
 using TheWorld . Models;
+using TheWorld . Services;
 using TheWorld . ViewModels;
 
 namespace TheWorld . Controllers . Api
@@ -14,13 +15,15 @@ namespace TheWorld . Controllers . Api
     [Route ( "api/trips/{tripName}/stops" )]
     public class StopsController : Controller
     {
+        private GeoCordService _locationServices;
         private ILogger<StopsController> _logger;
         private IWorldRepo _repo;
 
-        public StopsController ( Models . IWorldRepo repo , ILogger<StopsController> logger )
+        public StopsController ( Models . IWorldRepo repo , ILogger<StopsController> logger , GeoCordService locationService )
         {
             _repo = repo;
             _logger = logger;
+            _locationServices = locationService;
         }
 
         [HttpGet ( "" )]
@@ -56,13 +59,25 @@ namespace TheWorld . Controllers . Api
             {
                 if ( ModelState . IsValid )
                 {
-                    var stop = Mapper.Map<Trip>(stopVM);
+                    var stop = Mapper.Map<Stop>(stopVM);
 
-                    _repo . AddStop ( tripName , stop );
+                    var result = await _locationServices.GetCordsAsync(stop.Name);
 
-                    if ( await _repo . SaveChangesAsync ( ) )
+                    if ( !result . Success )
                     {
-                        return Created ( $"api/trips/{tripName}/stops/{stopVM . Name}" , Mapper . Map<StopViewModel> ( stopVM ) );
+                        _logger . LogError ( result . Message );
+                    }
+                    else
+                    {
+                        stop . Latitude = result . Latitude;
+                        stop . Longitude = result . Longitude;
+
+                        _repo . AddStop ( tripName , stop );
+
+                        if ( await _repo . SaveChangesAsync ( ) )
+                        {
+                            return Created ( $"api/trips/{tripName}/stops/{stopVM . Name}" , Mapper . Map<StopViewModel> ( stop ) );
+                        }
                     }
                 }
             }

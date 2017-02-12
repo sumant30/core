@@ -4,6 +4,7 @@ using TheWorld . Services;
 using Microsoft . Extensions . Configuration;
 using TheWorld . Models;
 using Microsoft . Extensions . Logging;
+using Microsoft . AspNetCore . Authorization;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,12 +27,18 @@ namespace TheWorld . Controllers . Web
         // GET: /<controller>/
         public IActionResult Index ( )
         {
+            return View ( );
+        }
+
+        //[Authorize]
+        public IActionResult Trips ( )
+        {
             try
             {
                 var data = _repo.GetAllTrips();
                 return View ( data );
             }
-            catch ( System . Exception ex)
+            catch ( System . Exception ex )
             {
 
                 _logger . LogError ( $"An error occured while fetching trips:{ex . Message}" );

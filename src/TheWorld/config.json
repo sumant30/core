@@ -3,6 +3,9 @@
     "ToAddress": "sumant@aol.com"
   },
   "ConnectionStrings": {
-    "TheWorldConnectionString":"Server=(localdb)\\MSSQLLocalDB;Database=TheWorld;Trusted_Connection=true;MultipleActiveResultSets=true;" 
+    "TheWorldConnectionString": "Server=(localdb)\\MSSQLLocalDB;Database=TheWorld;Trusted_Connection=true;MultipleActiveResultSets=true;"
+  },
+  "Keys": {
+    "BingKey": "AiNbnRYqHqS5-T9d0oRS9m5m8JTqTXMvqkW80Xc4Q0GZr__W5M78DdctBSuGlJHU"
   }
 }

@@ -7,6 +7,8 @@ using Microsoft . Extensions . Configuration;
 using Newtonsoft . Json . Serialization;
 using AutoMapper;
 using TheWorld . ViewModels;
+using Microsoft . AspNetCore . Identity . EntityFrameworkCore;
+using TheWorld . Models;
 
 namespace TheWorld
 {
@@ -43,11 +45,18 @@ namespace TheWorld
             services . AddDbContext<Models . WorldContext> ( );
             services . AddScoped<Models . IWorldRepo , Models . WorldRepo> ( );
             services . AddTransient<Models . WorldContextSeed> ( );
+            services . AddTransient<GeoCordService> ( );
             services . AddLogging ( );
             services . AddMvc ( ) . AddJsonOptions ( config =>
             {
                 config . SerializerSettings . ContractResolver = new CamelCasePropertyNamesContractResolver ( );
             } );
+            services . AddIdentity<Models . WorldUser , IdentityRole> ( config =>
+            {
+                config . User . RequireUniqueEmail = true;
+                config . Password . RequiredLength = 8;
+                config . Cookies . ApplicationCookie . LoginPath = "/Auth/Login";
+            } ) . AddEntityFrameworkStores<WorldContext> ( );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +74,10 @@ namespace TheWorld
             }
 
             app . UseStaticFiles ( );
+
+            app . UseIdentity ( );
+
+
 
             Mapper . Initialize ( config =>
                 {

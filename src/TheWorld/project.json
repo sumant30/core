@@ -25,7 +25,10 @@
     },
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "AutoMapper": "5.2.0",
-    "Microsoft.Extensions.Logging.Abstractions": "1.1.0"
+    "Microsoft.Extensions.Logging.Abstractions": "1.1.0",
+    "Microsoft.Net.Http": "2.2.22",
+    "System.Net.Http": "4.3.0",
+    "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0"
   },
   "frameworks": {
     "netcoreapp1.0": {
