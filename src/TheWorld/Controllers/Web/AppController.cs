@@ -33,17 +33,7 @@ namespace TheWorld . Controllers . Web
         //[Authorize]
         public IActionResult Trips ( )
         {
-            try
-            {
-                var data = _repo.GetAllTrips();
-                return View ( data );
-            }
-            catch ( System . Exception ex )
-            {
-
-                _logger . LogError ( $"An error occured while fetching trips:{ex . Message}" );
-                return Redirect ( "/error" );
-            }
+            return View ( );
         }
 
         public IActionResult Contact ( )
